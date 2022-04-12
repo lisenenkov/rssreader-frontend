@@ -1,0 +1,27 @@
+.rating {
+  background-color: #F5C518;
+  padding: 8px 3px 3px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #707070;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  position: relative;
+  min-width: 50px;
+
+  &::before{
+    content: "IMDB";
+    font-size: 8px;
+    font-weight: 700;
+    position: absolute;
+    top: 2px;
+    right: 2px;
+  }
+
+  .votes{
+    margin-left: 2px;
+    font-size: 10px;
+    color: gray;
+  }
+}
