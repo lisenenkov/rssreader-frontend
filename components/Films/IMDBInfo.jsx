@@ -19,20 +19,19 @@ const IMDBInfo = ({ id, className }) => {
   const { loading, error, data } = useQuery(GQL_FETCH_RATING, {
     variables: { id },
     context: {
-      //uri: 'http://127.0.0.1:8080/imdb',
-      uri: 'http://192.168.1.5:8080/imdb',
+      uri: process.env.NEXT_PUBLIC_API_IMDB_URL,
     }
   })
 
   if (loading || error != null)
     return <Image src="/imdb.png" width="37" height="18" className={className} />
 
-  const { title } = data;
+  const { title: { ratingsSummary: { aggregateRating, voteCount } } } = data;
 
   return <span className={classnames(styles.rating, className)}>
-    {title.ratingsSummary.aggregateRating}
+    {aggregateRating}
     <span className={styles.votes}>
-      {title.ratingsSummary.voteCount}
+      {voteCount}
     </span>
   </span>
 }
