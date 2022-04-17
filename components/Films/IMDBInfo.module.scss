@@ -5,12 +5,14 @@
   border-style: solid;
   border-color: #707070;
   border-radius: 4px;
+  color: black;
   font-size: 12px;
   font-weight: 700;
   position: relative;
   min-width: 50px;
+  display: inline-block;
 
-  &::before{
+  &::before {
     content: "IMDB";
     font-size: 8px;
     font-weight: 700;
@@ -19,7 +21,7 @@
     right: 2px;
   }
 
-  .votes{
+  .votes {
     margin-left: 2px;
     font-size: 10px;
     color: gray;

@@ -2,6 +2,22 @@ import { Alert, Button, ListGroup, Placeholder } from 'react-bootstrap'
 import { Interweave } from 'interweave'
 import { GQL_GET_FILM } from "api/gql_quries"
 import { useQuery, useMutation } from '@apollo/client'
+import IMDBInfo from './IMDBInfo'
+
+const htmlTransorm = (node, children) => {
+  if (node.nodeName === 'SCRIPT') {
+    return null;
+  }
+  if (node.nodeName === 'A') {
+    return <>{children}</>;
+  }
+  if (node.className === 'imdbRatingPlugin') {
+    const { dataset: { title } } = node
+    if (title)
+      return <IMDBInfo id={title} />;
+  }
+
+}
 
 const FilmInfo = ({ id }) => {
   const { loading, error, data } = useQuery(GQL_GET_FILM, {
@@ -23,9 +39,11 @@ const FilmInfo = ({ id }) => {
 
   var { film: { links = [] } } = data
   var description = links && links[0].description
-  console.log(links)
   return < div >
-    <Interweave content={description} />
+    <Interweave content={description} transform={htmlTransorm} />
+    <ListGroup>
+      {links.map((link) => <a href={link.url} target="_blank">{link.name}</a>)}
+    </ListGroup>
   </div >
 }
 

@@ -1,10 +1,10 @@
 import React from 'react'
-import Link from 'next/link'
 import Head from 'next/head'
+import Link from 'next/link'
 
 import { useRouter } from 'next/router'
 import classNames from 'classnames'
-import { Nav } from 'react-bootstrap'
+import { Container, Nav } from 'react-bootstrap'
 
 const MenuLink = ({ href, children }) => {
   const router = useRouter();
@@ -42,9 +42,9 @@ const MainLayout = ({ children }) => (
       </div>
     </Nav>
 
-    <div className="container">
+    <Container fluid>
       {children}
-    </div>
+    </Container>
   </>
 )
 
