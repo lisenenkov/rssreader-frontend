@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client"
+import { gql } from "graphql-request"
 
 export const GQL_FETCH_RSSSOURCES = gql`
 query rssSources {
@@ -43,7 +43,7 @@ query films {
 `
 
 export const GQL_GET_FILM = gql`
-query film($id:ID!) {
+query film($id: ID!) {
   film(id: $id) { 
     links {
       rssSource, url, category, name, year, comment, pubDate, description

@@ -1,9 +1,15 @@
-import { GQL_FETCH_RSSSOURCES } from "api/gql_quries"
-import { useQuery } from "@apollo/client";
+import { gql, request } from 'graphql-request'
+import { GQL_FETCH_FILMS, GQL_GET_FILM, GQL_FETCH_RSSSOURCES, GQL_CREATE_RSSSOURCE, GQL_UPDATE_RSSSOURCE, GQL_DELETE_RSSSOURCE } from "api/gql_quries"
 
+const grphql_url = process.env.NEXT_PUBLIC_API_URL
 
 const API = {
-  listRssSource: () => []
+  fetchRssSources: () => request(grphql_url, GQL_FETCH_RSSSOURCES),
+  createRssSource: (rssSource) => request(grphql_url, GQL_CREATE_RSSSOURCE, { rssSource }),
+  updateRssSource: (id, rssSource) => request(grphql_url, GQL_UPDATE_RSSSOURCE, { id, rssSource }),
+  deleteRssSource: (id) => request(grphql_url, GQL_DELETE_RSSSOURCE, { id }),
+  fetchFilms: () => request(grphql_url, GQL_FETCH_FILMS),
+  getFilm: (id) => request(grphql_url, GQL_GET_FILM, { id })
 }
 
 export default API

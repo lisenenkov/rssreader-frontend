@@ -1,13 +1,12 @@
-import React, { useState } from 'react'
-import { Alert, Accordion, Col, Container, Placeholder, ListGroup, Row } from 'react-bootstrap'
-import { GQL_FETCH_FILMS } from 'api/gql_quries'
-import { useQuery } from '@apollo/client'
+import React from 'react'
+import { Alert, Col, Container, Placeholder, ListGroup, Row } from 'react-bootstrap'
 import IMDBInfo from './IMDBInfo'
 import KinopoiskInfo from './KinopoiskInfo'
 import FilmInfo from './FilmInfo'
+import { injectStore } from 'stores/Store'
 
 const FilmItem = ({ film, active }) => (
-  <ListGroup.Item key={film.id} action eventKey={film.id}>
+  <ListGroup.Item action eventKey={film.id} active={active}>
     {film.externalInfo.map(ei => {
       if (ei.site == "IMDB") {
         return <IMDBInfo id={ei.externalId} key={ei.externalId} className="me-2" />
@@ -19,37 +18,26 @@ const FilmItem = ({ film, active }) => (
   </ListGroup.Item>
 )
 
+const Films = ({ store }) => {
+  const films = store.films
+  const selectedFilm = films.selectedFilm
 
-const Films = () => {
-  const { loading, error, data } = useQuery(GQL_FETCH_FILMS)
-  const [currentFilm, setCurrentFilm] = useState(null)
-
-  if (loading) {
+  if (films.loading == true) {
     return <Placeholder animation="glow">
       <Placeholder sm={7} />
     </Placeholder>
   }
-  if (error) {
+  if (films.error) {
     return <Alert variant="warning">
-      {error.message}<br />
-      {error.extraInfo}
+      {error.message}
     </Alert>
   }
 
   return (
-    <Container fluid>
-      <Row>
-        <Col sm={4}>
-          <ListGroup onSelect={setCurrentFilm} size="xs">
-            {data.films.map((film) => <FilmItem film={film} key={film.id} active={film.id === currentFilm} />)}
-          </ListGroup>
-        </Col>
-        <Col>
-          <FilmInfo id={currentFilm} />
-        </Col>-
-      </Row>
-    </Container>
+    <ListGroup onSelect={selectedFilm.selectFilm} size="xs">
+      {films.list.map((film) => <FilmItem film={film} key={film.id} active={film.id == selectedFilm.id} />)}
+    </ListGroup>
   )
 }
 
-export default Films
+export default injectStore(Films)

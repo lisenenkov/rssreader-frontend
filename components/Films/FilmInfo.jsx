@@ -1,8 +1,7 @@
 import { Alert, Button, ListGroup, Placeholder } from 'react-bootstrap'
 import { Interweave } from 'interweave'
-import { GQL_GET_FILM } from "api/gql_quries"
-import { useQuery, useMutation } from '@apollo/client'
 import IMDBInfo from './IMDBInfo'
+import { injectStore } from 'stores/Store'
 
 const htmlTransorm = (node, children) => {
   if (node.nodeName === 'SCRIPT') {
@@ -19,17 +18,16 @@ const htmlTransorm = (node, children) => {
 
 }
 
-const FilmInfo = ({ id }) => {
-  const { loading, error, data } = useQuery(GQL_GET_FILM, {
-    variables: { id }
-  })
+const FilmInfo = ({ store }) => {
+  const films = store.films
+  const selectedFilm = films.selectedFilm
 
-  if (loading) {
+  if (selectedFilm.loading) {
     return <Placeholder animation="glow">
       <Placeholder sm={7} />
     </Placeholder>
   }
-  if (error) {
+  if (selectedFilm.error) {
     return <Alert variant="warning">
       {error.message}<br />
       {error.extraInfo}
@@ -37,14 +35,17 @@ const FilmInfo = ({ id }) => {
   }
 
 
-  var { film: { links = [] } } = data
-  var description = links && links[0].description
+  const { links = [] } = selectedFilm.filmInfo
+  const { description } = selectedFilm.selectedLink || {}
   return < div >
-    <Interweave content={description} transform={htmlTransorm} />
-    <ListGroup>
-      {links.map((link) => <a href={link.url} target="_blank">{link.name}</a>)}
+    <ListGroup onSelect={selectedFilm.selectFilmLink} size="xxs">
+      {links.map((link) =>
+        <ListGroup.Item eventKey={link.url} active={link.url == selectedFilm.selectedLink.url}>
+          <a href={link.url} className="link-dark" target="_blank">{link.pubDate} {link.comment}</a>
+        </ListGroup.Item>)}
     </ListGroup>
+    <Interweave content={description} transform={htmlTransorm} />
   </div >
 }
 
-export default FilmInfo
+export default injectStore(FilmInfo)

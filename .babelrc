@@ -26,7 +26,10 @@
     [
       "@babel/plugin-proposal-class-properties",
       {
-        "loose": false
+        "loose": false,
+        "assumptions": {
+          "setPublicClassFields": false
+        }
       }
     ]
   ]
