@@ -32,7 +32,7 @@ class SelectedFilm {
   }
 
   selectFilmLink = (filmLinkUrl) => {
-    this.selectedLink = this.filmInfo.links.find(v => v.url == filmLinkUrl)
+    this.selectedLink = this.filmInfo.links.find(v => v.url === filmLinkUrl)
   }
 
   fetchFilmInfoActiveFlow = null
@@ -63,7 +63,9 @@ class FilmsStore {
       list: observable,
       loading: observable,
       error: observable,
-      fetchFilms: action
+      fetchFilms: action,
+      updateFilm: action,
+      updateFilmLinks: action
     })
     onBecomeObserved(this, "list", this.fetchFilms)
   }
@@ -84,6 +86,29 @@ class FilmsStore {
       this.loading = false
       this.error = e
     }
+  }
+
+  updateFilm = async (id, film) => {
+    const data = await API.updateFilm(id, film)
+    runInAction(() => {
+      const newData = data.updateFilm
+      const newDataIndex = this.list.findIndex(v => v.id === newData.id)
+      if (newDataIndex >= 0)
+        Object.assign(this.list[newDataIndex], newData)
+      if (this.selectedFilm.id == newData.id)
+        Object.assign(this.selectedFilm.filmInfo, newData)
+    })
+  }
+
+  updateFilmLinks = async (linkIds, link) => {
+    const data = await API.updateFilmLinks(linkIds, link)
+    runInAction(() => {
+      const newData = data.updateFilmLinks
+      const links = this.selectedFilm.filmInfo.links;
+      for (link of links) {
+        Object.assign(link, newData.find(newLinkData => newLinkData.id === link.id && newLinkData.rssSource === link.rssSource));
+      }
+    })
   }
 
 }

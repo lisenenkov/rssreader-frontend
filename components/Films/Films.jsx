@@ -2,11 +2,12 @@ import React from 'react'
 import { Alert, Col, Container, Placeholder, ListGroup, Row } from 'react-bootstrap'
 import IMDBInfo from './IMDBInfo'
 import KinopoiskInfo from './KinopoiskInfo'
-import FilmInfo from './FilmInfo'
 import { injectStore } from 'stores/Store'
 
 const FilmItem = ({ film, active }) => (
-  <ListGroup.Item action eventKey={film.id} active={active}>
+  <ListGroup.Item action eventKey={film.id} active={active} className={{
+    "list-group-item-secondary": film.ignore
+  }}>
     {film.externalInfo.map(ei => {
       if (ei.site == "IMDB") {
         return <IMDBInfo id={ei.externalId} key={ei.externalId} className="me-2" />
@@ -29,12 +30,12 @@ const Films = ({ store }) => {
   }
   if (films.error) {
     return <Alert variant="warning">
-      {error.message}
+      {films.error.message}
     </Alert>
   }
 
   return (
-    <ListGroup onSelect={selectedFilm.selectFilm} size="xs">
+    <ListGroup onSelect={selectedFilm.selectFilm}>
       {films.list.map((film) => <FilmItem film={film} key={film.id} active={film.id == selectedFilm.id} />)}
     </ListGroup>
   )

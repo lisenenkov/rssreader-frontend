@@ -35,7 +35,7 @@ mutation deleteRssSource($id: ID!) {
 export const GQL_FETCH_FILMS = gql`
 query films {
   films { 
-    id, name, year, externalInfo {
+    id, name, year, ignore, externalInfo {
       site, externalId
     }
   }
@@ -45,9 +45,26 @@ query films {
 export const GQL_GET_FILM = gql`
 query film($id: ID!) {
   film(id: $id) { 
+    ignore,
     links {
-      rssSource, url, category, name, year, comment, pubDate, description
+      id, rssSource, url, category, name, year, comment, pubDate, description, viewed
     }
+  }
+}
+`
+
+export const GQL_UPDATE_FILM = gql`
+mutation updateFilm($id: ID!, $film: FilmContent) {
+  updateFilm(id: $id, film: $film) {
+    id, ignore
+  }
+}
+`
+
+export const GQL_UPDATE_FILMLINK = gql`
+mutation updateFilmLinks($ids: [FilmLinkId], $filmLink: FilmLinkContent) {
+  updateFilmLinks(ids: $ids, filmLink: $filmLink) {
+    id, rssSource, viewed
   }
 }
 `

@@ -48,11 +48,11 @@ class RssSourcesStore {
       const newData = data.updateRssSource
       const newDataIndex = this.list.findIndex(v => v.id == newData.id)
       if (newDataIndex >= 0)
-        this.list[newDataIndex] = newData
+        Object.assign(this.list[newDataIndex], newData)
     })
   }
 
-  deleteRssSource = async (id, rssSource) => {
+  deleteRssSource = async (id) => {
     const data = await API.deleteRssSource(id)
     runInAction(() => {
       const newData = data.deleteRssSource

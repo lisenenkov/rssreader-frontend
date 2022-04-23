@@ -1,3 +1,4 @@
+import FilmActions from 'components/Films/FilmActions'
 import FilmInfo from 'components/Films/FilmInfo'
 import Films from 'components/Films/Films'
 import Link from 'next/link'
@@ -9,7 +10,8 @@ const IndexPage = () => (
       <Col sm="4" className='overflow-auto'>
         <Films />
       </Col>
-      <Col  className='overflow-auto'>
+      <Col className='overflow-auto'>
+        <FilmActions />
         <FilmInfo />
       </Col>
     </Container>
